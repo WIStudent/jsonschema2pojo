@@ -24,6 +24,7 @@ import static org.mockito.Mockito.*;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
+import org.jsonschema2pojo.AnnotationStyle;
 import org.jsonschema2pojo.GenerationConfig;
 import org.jsonschema2pojo.Schema;
 import org.junit.Test;
@@ -116,5 +117,6 @@ public class RequiredArrayRuleTest {
         rule = new RequiredArrayRule(ruleFactory);
         when(config.isIncludeJsr303Annotations()).thenReturn(true);
         when(config.isUseJakartaValidation()).thenReturn(useJakartaValidation);
+        when(config.getAnnotationStyle()).thenReturn(AnnotationStyle.NONE);
     }
 }

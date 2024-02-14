@@ -21,8 +21,10 @@ import java.lang.annotation.Annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.jsonschema2pojo.AnnotationStyle;
 import org.jsonschema2pojo.Schema;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.codemodel.JDocCommentable;
 import com.sun.codemodel.JFieldVar;
@@ -82,6 +84,11 @@ public class RequiredRule implements Rule<JDocCommentable, JDocCommentable> {
                     && generatableType instanceof JFieldVar) {
                 ((JFieldVar) generatableType).annotate(Nonnull.class);
             }
+
+            if(isJacksonAnnotationStyle()
+                && generatableType instanceof JFieldVar) {
+                ((JFieldVar) generatableType).annotate(JsonInclude.class).param("value", JsonInclude.Include.ALWAYS);
+            }
         } else {
             if (ruleFactory.getGenerationConfig().isIncludeJsr305Annotations()
                     && generatableType instanceof JFieldVar) {
@@ -90,5 +97,10 @@ public class RequiredRule implements Rule<JDocCommentable, JDocCommentable> {
         }
 
         return generatableType;
+    }
+
+    private boolean isJacksonAnnotationStyle() {
+        AnnotationStyle style = ruleFactory.getGenerationConfig().getAnnotationStyle();
+        return style.equals(AnnotationStyle.JACKSON) || style.equals(AnnotationStyle.JACKSON2);
     }
 }
